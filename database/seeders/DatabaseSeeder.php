@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CategorySeeder::class,
             TestimonialSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }
