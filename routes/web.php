@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\backend\CategoryController;
+use App\Http\Controllers\backend\DashboardController;
+use App\Http\Controllers\backend\TestimonialController;
+use App\Http\Controllers\frontend\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +18,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/dashboard', function () {
-    return view('backend.pages.dashboard');
+
+/*Frontend Route*/
+
+Route::prefix('')->group(function(){
+
+Route::get('/',[HomeController::class,'home'])->name('home');
 });
 
-Route::get('/', function () {
-    return view('frontend.pages.home');
+
+/*Admin Auth routes */
+
+Route::prefix('admin/')->group(function(){
+    Route::get('login', [LoginController::class, 'loginPage'])->name('admin.loginpage');
+    Route::post('login', [LoginController::class, 'login'])->name('admin.login');
+
+
+    Route::middleware(['auth'])->group(function(){
+        Route::get('dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('logout', [LoginController::class, 'logout'])->name('admin.logout');
+
+        Route::resource('category',CategoryController::class);
+        Route::resource('testimonial',TestimonialController::class);
+    });
+
+
+
 });
+/*Admin Auth routes */

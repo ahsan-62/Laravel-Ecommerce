@@ -13,7 +13,7 @@
     <div id="root">
       <div id="nav" class="nav-container d-flex">
         <div class="nav-content d-flex">
-      
+
          @include('backend.layouts.inc.logo')
          @include('backend.layouts.inc.user-menu')
 
@@ -39,9 +39,6 @@
       </main>
       @include('backend.layouts.inc.footer')
     </div>
-
-  
-  
 
  @include('backend.layouts.inc.script')
   </body>
