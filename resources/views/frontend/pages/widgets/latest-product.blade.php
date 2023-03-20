@@ -20,12 +20,12 @@
                             <ul>
                                 <li><a data-toggle="modal" data-target="#exampleModalCenter" href="javascript:void(0);"><i class="fa fa-eye"></i></a></li>
                                 <li><a href="wishlist.html"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-bag"></i></a></li>
+                                <li><a href="{{ route('productdetail.page', ['product_slug' => $product->slug]) }}"><i class="fa fa-shopping-bag"></i></a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="product-content">
-                        <h3><a href="#">{{ $product->name }}</a></h3>
+                        <h3><a href="{{ route('productdetail.page', ['product_slug' => $product->slug]) }}">{{ $product->name }}</a></h3>
                         <p class="pull-left">${{ $product->product_price }}
 
                         </p>
