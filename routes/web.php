@@ -3,11 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\backend\CategoryController;
+use App\Http\Controllers\backend\CouponController;
 use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\ProductController;
 use App\Http\Controllers\backend\TestimonialController;
+use App\Http\Controllers\frontend\Auth\CustomerController;
 use App\Http\Controllers\frontend\CartController;
 use App\Http\Controllers\frontend\HomeController;
+use App\Http\Controllers\frontend\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +34,26 @@ Route::get('/single-product/{product_slug}', [HomeController::class, 'productDet
 Route::get('/shopping-cart', [CartController::class, 'cartPage'])->name('cart.page');
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('add-to.cart');
 Route::get('/remove-from-cart/{cart_id}', [CartController::class, 'removeFromCart'])->name('removefrom.cart');
+
+
+  /*Authentication routes for Customer/Guest */
+
+  Route::get('/register', [RegisterController::class, 'registerPage'])->name('register.page');
+  Route::post('/register', [RegisterController::class, 'registerStore'])->name('register.store');
+  Route::get('/login', [RegisterController::class, 'loginPage'])->name('login.page');
+  Route::post('/login', [RegisterController::class, 'loginStore'])->name('login.store');
+
+  Route::prefix('customer')->middleware(['auth', 'is_customer'])->group(function(){
+
+    Route::get('/dashboard',[CustomerController::class, 'dashboard'])->name('customer.dashboard');
+    Route::get('/logout', [RegisterController::class, 'logout'])->name('customer.logout');
+
+    Route::post('/cart/apply-coupon', [CartController::class, 'couponApply'])->name('customer.couponapply');
+        Route::get('/cart/remove-coupon/{coupon_name}', [CartController::class, 'removeCoupon'])->name('customer.couponremove');
+
+  });
+
+
 });
 
 
@@ -48,6 +71,7 @@ Route::prefix('admin/')->group(function(){
         Route::resource('category',CategoryController::class);
         Route::resource('testimonial',TestimonialController::class);
         Route::resource('products',ProductController::class);
+        Route::resource('coupon', CouponController::class);
     });
 
 

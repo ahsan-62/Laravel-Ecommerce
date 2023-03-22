@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\Http\Controllers\Controller;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
+use App\Http\Requests\CouponStoreRequest;
+use App\Http\Requests\CouponUpdateRequest;
 
 class CouponController extends Controller
 {
@@ -14,7 +18,8 @@ class CouponController extends Controller
      */
     public function index()
     {
-        //
+       $coupons=Coupon::latest('id')->paginate(10);
+       return view('backend.pages.coupon.index',compact('coupons'));
     }
 
     /**
@@ -24,7 +29,7 @@ class CouponController extends Controller
      */
     public function create()
     {
-        //
+        return view('backend.pages.coupon.create');
     }
 
     /**
@@ -33,9 +38,17 @@ class CouponController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CouponStoreRequest $request)
     {
-        //
+        Coupon::create([
+            'coupon_name' => $request->coupon_name,
+            'discount_amount' => $request->discount_amount,
+            'minimum_purchase_amount' => $request->minimum_purchase_amount,
+            'validity_till' => $request->validity_till,
+        ]);
+
+        Toastr::success('Data Stored Successfully!');
+        return redirect()->route('coupon.index');
     }
 
     /**
@@ -57,7 +70,8 @@ class CouponController extends Controller
      */
     public function edit($id)
     {
-        //
+        $coupon=Coupon::find($id);
+        return view('backend.pages.coupon.edit',compact('coupon'));
     }
 
     /**
@@ -67,9 +81,19 @@ class CouponController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CouponUpdateRequest $request, $id)
     {
-        //
+        $coupon = Coupon::find($id);
+        $coupon->update([
+            'coupon_name' => $request->coupon_name,
+            'discount_amount' => $request->discount_amount,
+            'minimum_purchase_amount' => $request->minimum_purchase_amount,
+            'validity_till' => $request->validity_till,
+            'is_active' => $request->filled('is_active'),
+        ]);
+
+        Toastr::success('Data Updated Successfully!');
+        return redirect()->route('coupon.index');
     }
 
     /**

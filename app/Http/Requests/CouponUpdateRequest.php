@@ -13,7 +13,7 @@ class CouponUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,10 @@ class CouponUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'coupon_name' => 'required|string|max:255',
+            'discount_amount' => 'required|numeric',
+            'minimum_purchase_amount' => 'required|numeric',
+            'validity_till' => 'required|date',
         ];
     }
 }
