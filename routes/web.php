@@ -2,15 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\backend\CategoryController;
-use App\Http\Controllers\backend\CouponController;
-use App\Http\Controllers\backend\DashboardController;
-use App\Http\Controllers\backend\ProductController;
-use App\Http\Controllers\backend\TestimonialController;
-use App\Http\Controllers\frontend\Auth\CustomerController;
 use App\Http\Controllers\frontend\CartController;
 use App\Http\Controllers\frontend\HomeController;
+use App\Http\Controllers\backend\CouponController;
+use App\Http\Controllers\backend\ProductController;
+use App\Http\Controllers\backend\CategoryController;
+use App\Http\Controllers\backend\DashboardController;
+use App\Http\Controllers\frontend\CheckoutController;
 use App\Http\Controllers\frontend\RegisterController;
+use App\Http\Controllers\backend\TestimonialController;
+use App\Http\Controllers\frontend\Auth\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,10 @@ Route::get('/remove-from-cart/{cart_id}', [CartController::class, 'removeFromCar
   Route::get('/login', [RegisterController::class, 'loginPage'])->name('login.page');
   Route::post('/login', [RegisterController::class, 'loginStore'])->name('login.store');
 
+
+   /*AJAX Call */
+   Route::get('/upzilla/ajax/{district_id}', [CheckoutController::class, 'loadUpazillaAjax'])->name('loadupazila.ajax');
+
   Route::prefix('customer')->middleware(['auth', 'is_customer'])->group(function(){
 
     Route::get('/dashboard',[CustomerController::class, 'dashboard'])->name('customer.dashboard');
@@ -50,6 +55,10 @@ Route::get('/remove-from-cart/{cart_id}', [CartController::class, 'removeFromCar
 
     Route::post('/cart/apply-coupon', [CartController::class, 'couponApply'])->name('customer.couponapply');
         Route::get('/cart/remove-coupon/{coupon_name}', [CartController::class, 'removeCoupon'])->name('customer.couponremove');
+
+         /*Checkout Page */
+         Route::get('checkout', [CheckoutController::class, 'checkoutPage'])->name('customer.checkoutpage');
+         Route::post('placeorder', [CheckoutController::class, 'placeOrder'])->name('customer.placeorder');
 
   });
 

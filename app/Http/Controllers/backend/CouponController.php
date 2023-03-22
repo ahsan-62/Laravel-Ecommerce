@@ -104,6 +104,8 @@ class CouponController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $coupon = Coupon::find($id)->delete();
+        Toastr::success('Data Deleted Successfully!');
+        return redirect()->route('coupon.index');
     }
 }
