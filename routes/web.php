@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\frontend\CartController;
@@ -8,6 +9,8 @@ use App\Http\Controllers\backend\CouponController;
 use App\Http\Controllers\backend\ProductController;
 use App\Http\Controllers\backend\CategoryController;
 use App\Http\Controllers\backend\DashboardController;
+use App\Http\Controllers\backend\OrderController;
+use App\Http\Controllers\backend\CustomerController as BackendCustomerController;
 use App\Http\Controllers\frontend\CheckoutController;
 use App\Http\Controllers\frontend\RegisterController;
 use App\Http\Controllers\backend\TestimonialController;
@@ -60,6 +63,15 @@ Route::get('/remove-from-cart/{cart_id}', [CartController::class, 'removeFromCar
          Route::get('checkout', [CheckoutController::class, 'checkoutPage'])->name('customer.checkoutpage');
          Route::post('placeorder', [CheckoutController::class, 'placeOrder'])->name('customer.placeorder');
 
+        //  Email
+
+        Route::get('email', function(){
+            $order = Order::whereId(1)->with(['billing', 'orderdetails'])->get();
+            return view('frontend.mail.purchaseconfirm', [
+                'order_details' => $order
+            ]);
+        });
+
   });
 
 
@@ -81,6 +93,8 @@ Route::prefix('admin/')->group(function(){
         Route::resource('testimonial',TestimonialController::class);
         Route::resource('products',ProductController::class);
         Route::resource('coupon', CouponController::class);
+        Route::get('order-list', [OrderController::class, 'index'])->name('admin.orderlist');
+        Route::get('customer-list', [BackendCustomerController::class, 'index'])->name('admin.customerlist');
     });
 
 
